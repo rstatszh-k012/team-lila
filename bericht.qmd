@@ -1,0 +1,238 @@
+---
+title: "Verkehrsunfälle im Kanton Zürich"
+subtitle: "Wer verunfallt, wie schwer, und wann?"
+# So fügst du dich als Autor:in hinzu:
+# Kopiere die drei Zeilen (name, email, affiliation) und trage deine Daten ein.
+author:
+  - name: "Vorname Nachname"
+    email: "vorname.nachname@bi.zh.ch"
+    affiliation: "Statistisches Amt Kanton Zürich"
+date: last-modified
+date-format: "DD.MM.YYYY"
+lang: de-CH
+published-title: "Datum"
+affiliation-title: "Organisationseinheit"
+abstract-title: "Klassifikation"
+abstract: "Intern"
+format:
+    html:
+        # Themeing
+        theme: _extensions/biplaR-html/style/bipla.scss
+        title-block-banner: "#0076BD"
+        css: _extensions/biplaR-html/style/logo.css
+        # Figures
+        fig-cap-location: top
+        fig-align: "left"
+        # TOC and numbering
+        toc: true
+        toc-location: left
+        toc-title: "Inhalt"
+        number-sections: true
+        number-depth: 3
+        # no dependencies
+        embed-resources: true
+engine: knitr
+execute:
+  warning: false
+  echo: false
+---
+
+```{r}
+#| label: setup
+library(tidyverse)
+library(statR)
+```
+
+```{r}
+#| label: daten-einlesen
+verkehrsunfaelle <- read_csv(
+  here::here("daten/verkehrsunfaelle-klein.csv")
+)
+```
+
+```{r}
+#| label: aufbereitung
+# Wochentage und Schweregrade in eine sinnvolle Reihenfolge bringen
+wochentage <- c("Montag", "Dienstag", "Mittwoch", "Donnerstag",
+                "Freitag", "Samstag", "Sonntag")
+
+schweregrade <- c("Unfall mit Sachschaden", "Unfall mit Leichtverletzten",
+                  "Unfall mit Schwerverletzten", "Unfall mit Getöteten")
+
+# Pro Unfall eine Verkehrsteilnahme-Kategorie ableiten. Ist mehr als eine
+# Kategorie beteiligt, zählen wir den Unfall zur besonders gefährdeten Gruppe
+# (zu Fuss vor Velo vor Motorrad).
+verkehrsunfaelle <- verkehrsunfaelle |>
+  mutate(
+    wochentag = factor(wochentag, levels = wochentage),
+    schweregrad = factor(schweregrad, levels = schweregrade),
+    beteiligung = case_when(
+      fussgaenger ~ "Zu Fuss",
+      fahrrad     ~ "Velo",
+      motorrad    ~ "Motorrad",
+      .default    = "Übrige (v.a. Auto)"
+    ),
+    schwer_verletzt_getoetet = schweregrad %in%
+      c("Unfall mit Schwerverletzten", "Unfall mit Getöteten")
+  )
+
+beteiligung_levels <- c("Zu Fuss", "Velo", "Motorrad", "Übrige (v.a. Auto)")
+verkehrsunfaelle <- verkehrsunfaelle |>
+  mutate(beteiligung = factor(beteiligung, levels = beteiligung_levels))
+```
+
+# Ausgangslage
+
+Die Kantonspolizei Zürich veröffentlicht als Open Government Data alle polizeilich registrierten Verkehrsunfälle im Kanton Zürich seit 2011. Jede Zeile ist ein einzelner Unfall mit Angaben zu Unfalltyp, Schweregrad, beteiligten Verkehrsteilnehmenden, Strassentyp und Zeitpunkt. Für diesen Bericht verwenden wir einen Ausschnitt mit zehn Variablen.
+
+Datenquelle: [Kantonspolizei Kanton Zürich, Datensatz 718](https://www.zh.ch/de/politik-staat/statistik-daten/datenkatalog.html#/datasets/718@kantonspolizei-kanton-zuerich).
+
+<!--
+ANLEITUNG FÜR ALLE VIER PERSONEN
+
+Jede Person hat einen eigenen Abschnitt (1 bis 4) mit einer fertigen Grafik.
+Deine Aufgabe:
+
+1. Rendere den Bericht einmal und schau dir alle Grafiken an.
+2. Erstelle eine Branch mit dem Namen "issue-N-<slug>" (z. B. "issue-3-methoden").
+3. Geh zu deinem Abschnitt (dein Issue sagt dir, welcher).
+4. Schreib zwei bis vier Sätze, die deine Grafik beschreiben.
+   Ersetze dazu die Zeile "TODO: ..." mit deinem Text.
+5. Committe deine Änderungen auf deine Branch.
+6. Auf GitHub, öffne einen Pull Request gegen "main" und markiere eine andere Person
+   als Reviewer. Verlinke dein Issue (z. B. "Closes #N").
+7. Reviewe den Pull Request, der dir zugewiesen ist, und hinterlasse
+   mindestens einen Kommentar.
+
+Der Code bleibt unverändert. Im gerenderten Bericht wird kein Code angezeigt.
+-->
+
+# Unfälle pro Jahr
+
+TODO: Beschreibe die Grafik in zwei bis vier Sätzen. Stichpunkte sind auch okay.
+
+```{r}
+#| label: fig-unfaelle-pro-jahr
+#| fig-cap: "Registrierte Verkehrsunfälle pro Jahr"
+plot_jahr <- verkehrsunfaelle |>
+  count(jahr) |>
+  ggplot(aes(x = jahr, y = n)) +
+  geom_col(fill = zhpal$zhblue[1], width = 0.7) +
+  scale_x_continuous(breaks = seq(2011, 2025, 2)) +
+  scale_y_continuous(labels = \(x) gt::vec_fmt_number(x, sep_mark = "'", decimals = 0)) +
+  labs(
+    title = "Registrierte Verkehrsunfälle pro Jahr",
+    subtitle = "Kanton Zürich, 2011 bis 2025",
+    x = NULL,
+    y = "Anzahl Unfälle",
+    caption = "Datenquelle: Kantonspolizei Kanton Zürich"
+  ) +
+  theme_stat()
+
+flush_left(plot_jahr)
+```
+
+
+# Wie schwer sind die Unfälle je nach Beteiligung?
+
+TODO: Beschreibe die Grafik in zwei bis vier Sätzen. Stichpunkte sind auch okay.
+
+```{r}
+#| label: fig-schwere-nach-beteiligung
+#| fig-cap: "Anteil schwerer und tödlicher Unfälle nach beteiligter Verkehrsart"
+schwere_sum <- verkehrsunfaelle |>
+  summarise(
+    anteil_schwer = mean(schwer_verletzt_getoetet),
+    .by = beteiligung
+  )
+
+plot_schwere <- schwere_sum |>
+  ggplot(aes(x = anteil_schwer, y = fct_reorder(beteiligung, anteil_schwer))) +
+  geom_col(fill = zhpal$zhblue[1], width = 0.75) +
+  geom_text(
+    aes(label = scales::percent(anteil_schwer, accuracy = 0.1, decimal.mark = ",")),
+    hjust = -0.15, size = 3.2
+  ) +
+  scale_x_continuous(
+    labels = scales::label_percent(decimal.mark = ","),
+    expand = expansion(mult = c(0, 0.15))
+  ) +
+  labs(
+    title = "Anteil schwerer und tödlicher Unfälle nach Beteiligung",
+    subtitle = "Kanton Zürich, 2011 bis 2025",
+    x = "Anteil schwer/tödlich",
+    y = NULL,
+    caption = "Datenquelle: Kantonspolizei Kanton Zürich"
+  ) +
+  theme_stat()
+
+flush_left(plot_schwere)
+```
+
+# Wer ist bei tödlichen Unfällen beteiligt?
+
+TODO: Beschreibe die Grafik in zwei bis vier Sätzen. Stichpunkte sind auch okay.
+
+
+```{r}
+#| label: fig-getoetete
+#| fig-cap: "Beteiligung bei tödlichen Unfällen im Vergleich zu allen Unfällen"
+# Zwei Gruppen: einmal alle Unfälle, einmal nur die tödlichen.
+# Jeder tödliche Unfall taucht also in beiden Gruppen auf.
+alle <- verkehrsunfaelle |>
+  count(beteiligung) |>
+  mutate(gruppe = "Alle Unfälle")
+
+toedlich <- verkehrsunfaelle |>
+  filter(schweregrad == "Unfall mit Getöteten") |>
+  count(beteiligung) |>
+  mutate(gruppe = "Tödliche Unfälle")
+
+vergleich <- bind_rows(alle, toedlich) |>
+  mutate(anteil = n / sum(n), .by = gruppe)
+
+plot_getoetete <- vergleich |>
+  ggplot(aes(x = anteil, y = fct_rev(gruppe), fill = beteiligung)) +
+  geom_col(width = 0.6) +
+  scale_x_continuous(labels = scales::label_percent()) +
+  scale_fill_manual(values = zhpal$zhwebaccent) +
+  labs(
+    title = "Beteiligung bei allen und bei tödlichen Unfällen",
+    subtitle = "Kanton Zürich, 2011 bis 2025",
+    x = NULL,
+    y = NULL,
+    fill = NULL,
+    caption = "Datenquelle: Kantonspolizei Kanton Zürich"
+  ) +
+  theme_stat()
+
+flush_left(plot_getoetete)
+```
+
+# Wann passieren Fuss- und Velounfälle?
+
+TODO: Beschreibe die Grafik in zwei bis vier Sätzen. Stichpunkte sind auch okay.
+
+```{r}
+#| label: fig-tageszeit
+#| fig-cap: "Fuss- und Velounfälle nach Tageszeit"
+plot_stunde <- verkehrsunfaelle |>
+  filter(beteiligung %in% c("Zu Fuss", "Velo"), !is.na(stunde)) |>
+  count(stunde, beteiligung) |>
+  ggplot(aes(x = stunde, y = n, colour = beteiligung)) +
+  geom_line(linewidth = 1.1) +
+  scale_x_continuous(breaks = seq(0, 24, 4)) +
+  scale_colour_manual(values = zhpal$zhwebaccent[1:2]) +
+  labs(
+    title = "Fuss- und Velounfälle nach Tageszeit",
+    subtitle = "Kanton Zürich, 2011 bis 2025",
+    x = "Stunde des Tages",
+    y = "Anzahl Unfälle",
+    colour = NULL,
+    caption = "Datenquelle: Kantonspolizei Kanton Zürich"
+  ) +
+  theme_stat()
+
+flush_left(plot_stunde)
+```
+

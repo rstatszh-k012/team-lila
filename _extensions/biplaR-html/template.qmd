@@ -1,0 +1,56 @@
+---
+title: "Titel anpassen"
+subtitle: "Untertitel hinzufügen"
+author: 
+  - name: "Vorname Nachname"
+    email: "vorname.nachname@bi.zh.ch"
+    affiliation: "Organisationsname"
+date: last-modified
+date-format: "DD.MM.YYYY"
+lang: de-CH
+published-title: "Datum"
+affiliation-title: "Organisationseinheit"
+abstract-title: "Klassifikation"
+abstract: "Intern"
+
+format: 
+    html:
+        # Themeing
+        theme: _extensions/biplaR-html/style/bipla.scss
+        title-block-banner: "#0076BD"
+        css: _extensions/biplaR-html/style/logo.css
+        # Figures
+        fig-cap-location: top
+        fig-align: "left"
+        # TOC and numbering
+        toc: true
+        toc-location: left
+        toc-title: "Inhalt"
+        number-sections: true
+        number-depth: 3
+        # no dependencies
+        embed-resources: true
+
+engine: knitr
+execute:
+  warning: false
+  echo: false
+
+---
+
+```{r setup}
+# adapt font size in plots in html-output with showtext
+if (!interactive()) showtext::showtext_opts(dpi = 200)
+
+# grab your data
+```
+
+# Ausgangslage
+
+```{r}
+# transform, analyse and present your data
+```
+
+# Fazit
+
+# Anhang
