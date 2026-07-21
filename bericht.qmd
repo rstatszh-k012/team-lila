@@ -7,6 +7,8 @@ author:
   - name: "Vorname Nachname"
     email: "vorname.nachname@bi.zh.ch"
     affiliation: "Statistisches Amt Kanton Zürich"
+  - name: "Rainbow Train"
+    email: "vorname.nachname@bi.zh.ch"
   - name: "caro316"
     email: "caro316@bi.zh.ch"
   - name: "Nina Oppliger"
@@ -223,7 +225,10 @@ flush_left(plot_getoetete)
 
 # Wann passieren Fuss- und Velounfälle?
 
-TODO: Beschreibe die Grafik in zwei bis vier Sätzen. Stichpunkte sind auch okay.
+- innerhalb eines Tages gibt es zwei Zeitperioden in denen besonders viele Fuss- und Velounfälle passieren.
+- dies ist während des Berufsverkehrs am Morgen (zwischen 6 und 8 Uhr) und am Abend (wischen 17 und 9 Uhr)
+- besonders ausgeprägt sind Velounfälle am Abend mit fast doppelt so vielen Unfällen als am Morgen
+- Fussunfälle am Abend haben nur eta 50% mehr Häufigkeit am Abend
 
 ```{r}
 #| label: fig-tageszeit
