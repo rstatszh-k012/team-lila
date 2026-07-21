@@ -35,6 +35,8 @@ engine: knitr
 execute:
   warning: false
   echo: false
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r}
@@ -110,6 +112,8 @@ Der Code bleibt unverändert. Im gerenderten Bericht wird kein Code angezeigt.
 # Unfälle pro Jahr
 
 TODO: Beschreibe die Grafik in zwei bis vier Sätzen. Stichpunkte sind auch okay.
+
+Die Anzahl der Verkehrsunfälle im Kanton Zürich nahm zwischen 2015 und 2019 zunächst zu. Im Jahr 2001 ging sie leicht zurück, bevor sie in den darauffolgenden Jahren wieder leicht anstieg. Im Jahr 2025 wurden insgesamt rund 15 000 Verkehrsunfälle registriert.
 
 ```{r}
 #| label: fig-unfaelle-pro-jahr
