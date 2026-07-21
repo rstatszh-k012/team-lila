@@ -35,6 +35,8 @@ engine: knitr
 execute:
   warning: false
   echo: false
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r}
@@ -171,7 +173,7 @@ flush_left(plot_schwere)
 
 # Wer ist bei tödlichen Unfällen beteiligt?
 
-TODO: Beschreibe die Grafik in zwei bis vier Sätzen. Stichpunkte sind auch okay.
+@fig-getoetete oben zeigt den Anteil der verschiedenen Verkehrsteilnehmern an allen Unfällen. Man erkennt deutlich, dass die Kategorie übrige, die vor allem aus Autos besteht, mit über 75% die grösste Beteiligung an allen Unfällen hat. @fig-getoetete unten zeigt den Anteil der Verkehrsteilnehmer bei tödlichen Unfällen. Hier zeigt sich ein anderes Bild. Der Anteil der Kategorie übriges ist nur knapp über 25%, wohingegen der Anteil Fussgänger signifikant gestiegen ist, auch auf über 25%.
 
 
 ```{r}
