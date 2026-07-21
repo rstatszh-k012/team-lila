@@ -7,6 +7,9 @@ author:
   - name: "Vorname Nachname"
     email: "vorname.nachname@bi.zh.ch"
     affiliation: "Statistisches Amt Kanton Zürich"
+  - name: "Rainbow Train"
+    email: "vorname.nachname@bi.zh.ch"
+    affiliation: "Statistisches Amt Kanton Zürich"
 date: last-modified
 date-format: "DD.MM.YYYY"
 lang: de-CH
