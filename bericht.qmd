@@ -35,6 +35,8 @@ engine: knitr
 execute:
   warning: false
   echo: false
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r}
@@ -135,7 +137,8 @@ flush_left(plot_jahr)
 
 # Wie schwer sind die Unfälle je nach Beteiligung?
 
-TODO: Beschreibe die Grafik in zwei bis vier Sätzen. Stichpunkte sind auch okay.
+Die Grafik zeigt, dass Fussgängerinnen und Fussgänger zwischen 2011 und 2025 den höchsten Anteil an schweren oder tödlichen Unfällen aufweisen (21,3 %). Danach folgen Velofahrende (15,7 %) und Motorradfahrende (14,6 %). 
+Unfälle mit den übrigen Verkehrsteilnehmenden, insbesondere Autos, führen dagegen deutlich seltener zu schweren oder tödlichen Folgen (1,1 %). Dies zeigt, dass ungeschützte Verkehrsteilnehmende häufiger von schweren oder tödlichen Unfallfolgen betroffen sind.
 
 ```{r}
 #| label: fig-schwere-nach-beteiligung
